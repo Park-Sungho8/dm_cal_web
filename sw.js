@@ -1,5 +1,5 @@
 /* The More — 서비스워커: 앱 셸을 캐시해 오프라인에서도 동작 */
-const CACHE = "themore-v2";
+const CACHE = "themore-v3";
 const SHELL = [
   "./",
   "./index.html",

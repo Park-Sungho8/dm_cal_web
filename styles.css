@@ -402,4 +402,13 @@ button { font-family: inherit; cursor: pointer; }
   box-shadow: 0 8px 20px rgba(110, 123, 255, 0.36);
 }
 .key--add:active { box-shadow: 0 4px 12px rgba(110, 123, 255, 0.30); }
+.key--clear {
+  background: linear-gradient(145deg, #ff9f0a 0%, #ff7a00 100%);
+  border-color: transparent;
+  color: #fff;
+  font-size: 26px;
+  font-weight: 700;
+  box-shadow: 0 8px 20px rgba(255, 138, 0, 0.36);
+}
+.key--clear:active { box-shadow: 0 4px 12px rgba(255, 138, 0, 0.30); }
 .key--empty { background: transparent; border: none; pointer-events: none; }
