@@ -7,12 +7,12 @@
 
   <!-- PWA -->
   <link rel="manifest" href="manifest.webmanifest" />
-  <meta name="theme-color" content="#1e6fff" />
+  <meta name="theme-color" content="#08080b" />
 
   <!-- iOS "홈 화면에 추가" 설정 -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="apple-mobile-web-app-title" content="The More" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="더모아" />
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
 
   <link rel="stylesheet" href="styles.css" />
@@ -21,10 +21,30 @@
   <!-- ===================== 홈 메뉴 ===================== -->
   <section id="view-home" class="view" data-view="home">
     <div class="home-inner">
-      <h1 class="home-title">The More</h1>
+      <div class="home-head">
+        <h1 class="home-title">The More</h1>
+        <p class="home-sub">환율 · 합산 계산기</p>
+      </div>
       <nav class="home-menu">
-        <a class="menu-btn" href="#/exchange">환율 계산</a>
-        <a class="menu-btn" href="#/sum">합산 계산</a>
+        <a class="menu-btn" href="#/exchange">
+          <span class="menu-btn__icon">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M7 4 3 8l4 4"/><path d="M3 8h13a4 4 0 0 1 4 4"/>
+              <path d="m17 20 4-4-4-4"/><path d="M21 16H8a4 4 0 0 1-4-4"/>
+            </svg>
+          </span>
+          <span class="menu-btn__label">환율 계산</span>
+          <span class="menu-btn__chev" aria-hidden="true">›</span>
+        </a>
+        <a class="menu-btn" href="#/sum">
+          <span class="menu-btn__icon">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>
+            </svg>
+          </span>
+          <span class="menu-btn__label">합산 계산</span>
+          <span class="menu-btn__chev" aria-hidden="true">›</span>
+        </a>
       </nav>
     </div>
   </section>
