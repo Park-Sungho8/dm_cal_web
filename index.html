@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no" />
+  <title>The More</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#1e6fff" />
+
+  <!-- iOS "홈 화면에 추가" 설정 -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="The More" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- ===================== 홈 메뉴 ===================== -->
+  <section id="view-home" class="view" data-view="home">
+    <div class="home-inner">
+      <h1 class="home-title">The More</h1>
+      <nav class="home-menu">
+        <a class="menu-btn" href="#/exchange">환율 계산</a>
+        <a class="menu-btn" href="#/sum">합산 계산</a>
+      </nav>
+    </div>
+  </section>
+
+  <!-- ===================== 환율 계산 ===================== -->
+  <section id="view-exchange" class="view" data-view="exchange" hidden>
+    <header class="nav-bar">
+      <a class="nav-back" href="#/">‹ The More</a>
+      <span class="nav-title">환율 계산</span>
+      <span class="nav-spacer"></span>
+    </header>
+
+    <div class="scroll">
+      <!-- 저장된 환율 표시 -->
+      <div id="ex-saved" class="saved-rate" hidden>
+        <div id="ex-saved-value" class="saved-rate__value">—</div>
+        <div id="ex-saved-meta" class="saved-rate__meta">—</div>
+      </div>
+
+      <!-- 계산 결과 -->
+      <div class="ex-result">
+        <span id="ex-result-num" class="ex-result__num placeholder">입력하슈</span>
+        <span id="ex-result-unit" class="ex-result__unit" hidden>¥/₩</span>
+      </div>
+
+      <button id="ex-save" class="btn-primary" type="button" disabled>저장</button>
+
+      <!-- 수동 입력 -->
+      <div class="fields">
+        <input id="ex-payment" class="field" inputmode="decimal" placeholder="결제 금액" />
+        <input id="ex-amountA" class="field" inputmode="decimal" placeholder="금액 A" />
+        <input id="ex-amountB" class="field" inputmode="decimal" placeholder="금액 B" />
+      </div>
+
+      <!-- 실시간 환율 -->
+      <div class="live-box">
+        <div class="live-box__head">실시간 환율 (엔 → 원)</div>
+        <div id="ex-live-value" class="live-box__value">—</div>
+        <div class="live-box__actions">
+          <button id="ex-live-fetch" class="btn-ghost" type="button">불러오기</button>
+          <button id="ex-live-save" class="btn-primary btn-sm" type="button" disabled>이 환율로 저장</button>
+        </div>
+        <div id="ex-live-msg" class="live-box__msg"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 합산 계산 ===================== -->
+  <section id="view-sum" class="view" data-view="sum" hidden>
+    <header class="nav-bar">
+      <a class="nav-back" href="#/">‹ The More</a>
+      <span class="nav-title">합산 계산</span>
+      <button id="sum-clear" class="nav-action" type="button">Clear</button>
+    </header>
+
+    <div class="sum-body">
+      <div id="sum-total" class="sum-total">0.00원</div>
+
+      <div id="sum-chips" class="chips"></div>
+
+      <div id="sum-thresholds" class="thresholds" hidden></div>
+
+      <div class="sum-footer">
+        <div id="sum-input" class="sum-input"></div>
+        <div id="sum-keypad" class="keypad"></div>
+      </div>
+    </div>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>
