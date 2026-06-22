@@ -172,7 +172,6 @@ const Sum = {
     thresholds: $("#sum-thresholds"),
     input: $("#sum-input"),
     keypad: $("#sum-keypad"),
-    clear: $("#sum-clear"),
   },
   numbers: [],
   current: "",
@@ -290,7 +289,7 @@ const Sum = {
       ["1", "2", "3", "del"],
       ["4", "5", "6", "add"],
       ["7", "8", "9", ""],
-      ["", "0", ".", ""],
+      ["", "0", ".", "clear"],
     ];
     this.el.keypad.innerHTML = "";
     for (const row of rows) {
@@ -310,6 +309,10 @@ const Sum = {
           btn.className = "key key--add";
           btn.textContent = "+";
           btn.addEventListener("click", () => this.add());
+        } else if (item === "clear") {
+          btn.className = "key key--clear";
+          btn.textContent = "C";
+          btn.addEventListener("click", () => this.clearAll());
         } else {
           btn.className = "key key--num";
           btn.textContent = item;
@@ -328,7 +331,6 @@ const Sum = {
 
   init() {
     this.buildKeypad();
-    this.el.clear.addEventListener("click", () => this.clearAll());
   },
 };
 

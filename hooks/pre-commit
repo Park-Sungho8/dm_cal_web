@@ -1,0 +1,30 @@
+#!/bin/sh
+# pre-commit — 셸 자원이 바뀌면 sw.js의 CACHE 버전을 내용 해시로 자동 갱신한다.
+# cache-first 전략에서 변경을 자동 전파하기 위함이며, 수동으로 버전을 올릴 필요가 없다.
+# 셸이 실제로 바뀐 커밋에서만 해시가 바뀐다. (워킹트리 파일을 해시 — 통째로 커밋하는 흐름 기준)
+# 설정: git config core.hooksPath hooks  (한 번만)
+
+root=$(git rev-parse --show-toplevel) || exit 0
+cd "$root" || exit 0
+[ -f sw.js ] || exit 0
+
+# 캐시되는 셸 자원 (고정 순서)
+files="index.html styles.css app.js manifest.webmanifest icons/icon-192.png icons/icon-512.png icons/icon-512-maskable.png icons/apple-touch-icon.png"
+
+existing=""
+for f in $files; do
+  [ -f "$f" ] && existing="$existing $f"
+done
+[ -n "$existing" ] || exit 0
+
+hash=$(cat $existing | shasum -a 256 | cut -c1-10) || exit 0
+new="const CACHE = \"themore-$hash\";"
+cur=$(grep -E '^const CACHE = ' sw.js)
+
+if [ "$cur" != "$new" ]; then
+  tmp=$(mktemp) || exit 0
+  sed -E "s|^const CACHE = \"themore-[^\"]*\";|$new|" sw.js > "$tmp" && mv "$tmp" sw.js
+  git add sw.js
+  echo "pre-commit: sw.js CACHE -> themore-$hash"
+fi
+exit 0
