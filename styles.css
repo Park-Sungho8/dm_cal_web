@@ -280,7 +280,10 @@ button { font-family: inherit; cursor: pointer; }
 .live-box__msg.error { color: var(--danger); }
 
 /* ===================== 합산 계산 ===================== */
+/* 키패드는 화면 하단 고정 — 가운데(칩·추천)만 스크롤 */
+#view-sum { height: 100%; }
 .sum-body { flex: 1; display: flex; flex-direction: column; padding-top: 18px; min-height: 0; }
+.sum-middle { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; }
 .sum-total {
   text-align: center;
   font-size: 42px;
@@ -347,7 +350,7 @@ button { font-family: inherit; cursor: pointer; }
 .thresholds .t-target { font-weight: 600; font-size: 18px; letter-spacing: -0.01em; }
 .thresholds .t-yen { color: var(--accent); font-size: 15px; margin-top: 3px; font-weight: 600; font-variant-numeric: tabular-nums; }
 
-.sum-footer { margin-top: auto; padding: 10px 0 calc(8px + var(--safe-bottom)); }
+.sum-footer { flex: 0 0 auto; padding: 10px 0 calc(8px + var(--safe-bottom)); }
 .sum-input {
   width: 324px;
   max-width: calc(100% - 32px);
@@ -367,8 +370,13 @@ button { font-family: inherit; cursor: pointer; }
   justify-content: center;
 }
 
-.keypad { display: flex; flex-direction: column; gap: 12px; align-items: center; }
-.keypad__row { display: flex; gap: 12px; }
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(4, 72px);
+  grid-auto-rows: 72px;
+  gap: 12px;
+  justify-content: center;
+}
 .key {
   width: 72px;
   height: 72px;
@@ -382,6 +390,9 @@ button { font-family: inherit; cursor: pointer; }
   color: var(--fg);
   background: var(--surface);
   transition: transform 0.08s ease, background 0.12s ease;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 .key:active { transform: scale(0.92); }
 .key--num { background: var(--surface); }
@@ -400,6 +411,11 @@ button { font-family: inherit; cursor: pointer; }
   font-size: 32px;
   font-weight: 600;
   box-shadow: 0 8px 20px rgba(110, 123, 255, 0.36);
+  /* 9 오른쪽에서 아래로 2행 세로 스팬 (계산기 스타일) */
+  grid-column: 4;
+  grid-row: 3 / 5;
+  height: 156px;
+  border-radius: 36px;
 }
 .key--add:active { box-shadow: 0 4px 12px rgba(110, 123, 255, 0.30); }
 .key--clear {
@@ -412,3 +428,11 @@ button { font-family: inherit; cursor: pointer; }
 }
 .key--clear:active { box-shadow: 0 4px 12px rgba(255, 138, 0, 0.30); }
 .key--empty { background: transparent; border: none; pointer-events: none; }
+
+/* ===== 컴팩트 모드: 항목 5개 이상이면 칩·추천 축소 (키패드는 불변) ===== */
+.sum-body.compact .chips { gap: 6px; }
+.sum-body.compact .chip { padding: 5px 10px; gap: 6px; font-size: 15px; border-radius: 10px; }
+.sum-body.compact .thresholds { gap: 6px; padding: 10px 16px 6px; }
+.sum-body.compact .thresholds > div { padding: 7px 6px; border-radius: 12px; }
+.sum-body.compact .t-target { font-size: 15px; }
+.sum-body.compact .t-yen { font-size: 13px; margin-top: 1px; }
