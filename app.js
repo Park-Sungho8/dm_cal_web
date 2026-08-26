@@ -167,6 +167,7 @@ const Exchange = {
  * ===================================================================== */
 const Sum = {
   el: {
+    body: $("#view-sum .sum-body"),
     total: $("#sum-total"),
     chips: $("#sum-chips"),
     thresholds: $("#sum-thresholds"),
@@ -255,6 +256,8 @@ const Sum = {
     this.renderChips();
     this.renderThresholds();
     this.renderInput();
+    // 항목 5개 이상이면 가운데 영역(칩·추천) 축소
+    this.el.body.classList.toggle("compact", this.numbers.length >= 5);
   },
 
   removeAt(idx) {
@@ -285,43 +288,61 @@ const Sum = {
   },
 
   buildKeypad() {
-    const rows = [
-      ["1", "2", "3", "del"],
-      ["4", "5", "6", "add"],
-      ["7", "8", "9", ""],
-      ["", "0", ".", "clear"],
+    // 4열 그리드. "add"는 CSS로 3~4행 세로 스팬, 이후 키는 4행으로 자동 배치.
+    const keys = [
+      "1", "2", "3", "clear",
+      "4", "5", "6", "del",
+      "7", "8", "9", "add",
+      "", "0", ".",
     ];
     this.el.keypad.innerHTML = "";
-    for (const row of rows) {
-      const r = document.createElement("div");
-      r.className = "keypad__row";
-      for (const item of row) {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        if (item === "") {
-          btn.className = "key key--empty";
-          btn.tabIndex = -1;
-        } else if (item === "del") {
-          btn.className = "key key--del";
-          btn.textContent = "⌫";
-          btn.addEventListener("click", () => this.del());
-        } else if (item === "add") {
-          btn.className = "key key--add";
-          btn.textContent = "+";
-          btn.addEventListener("click", () => this.add());
-        } else if (item === "clear") {
-          btn.className = "key key--clear";
-          btn.textContent = "C";
-          btn.addEventListener("click", () => this.clearAll());
-        } else {
-          btn.className = "key key--num";
-          btn.textContent = item;
-          btn.addEventListener("click", () => this.tap(item));
-        }
-        r.appendChild(btn);
+    for (const item of keys) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      if (item === "") {
+        btn.className = "key key--empty";
+        btn.tabIndex = -1;
+      } else if (item === "del") {
+        btn.className = "key key--del";
+        btn.textContent = "⌫";
+        btn.addEventListener("click", () => this.del());
+      } else if (item === "add") {
+        btn.className = "key key--add";
+        btn.textContent = "+";
+        btn.addEventListener("click", () => this.add());
+      } else if (item === "clear") {
+        btn.className = "key key--clear";
+        btn.textContent = "C";
+        this.bindLongPressClear(btn);
+      } else {
+        btn.className = "key key--num";
+        btn.textContent = item;
+        btn.addEventListener("click", () => this.tap(item));
       }
-      this.el.keypad.appendChild(r);
+      this.el.keypad.appendChild(btn);
     }
+  },
+
+  // C는 오터치로 전체삭제되지 않도록 길게(600ms) 눌러야 동작
+  bindLongPressClear(btn) {
+    let timer = null;
+    let fired = false;
+    const cancel = () => { clearTimeout(timer); timer = null; };
+    btn.addEventListener("pointerdown", () => {
+      fired = false;
+      timer = setTimeout(() => {
+        fired = true;
+        this.clearAll();
+        flashToast("전체 삭제됨");
+      }, 600);
+    });
+    btn.addEventListener("pointerup", () => {
+      cancel();
+      if (!fired) flashToast("길게 누르면 전체 삭제");
+    });
+    btn.addEventListener("pointerleave", cancel);
+    btn.addEventListener("pointercancel", cancel);
+    btn.addEventListener("contextmenu", (e) => e.preventDefault());
   },
 
   onShow() {
