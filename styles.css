@@ -45,8 +45,8 @@ html, body {
 }
 
 body {
+  /* safe-bottom은 뷰별로 처리 — body에 주면 하단 고정 요소가 이중으로 떠오른다 */
   padding-top: var(--safe-top);
-  padding-bottom: var(--safe-bottom);
   /* 상단에서 은은하게 번지는 액센트 글로우 */
   background:
     radial-gradient(125% 75% at 50% -12%, rgba(110, 123, 255, 0.18), transparent 58%),
@@ -168,7 +168,7 @@ button { font-family: inherit; cursor: pointer; }
 .nav-action:active { opacity: 0.55; }
 .nav-spacer { justify-self: end; }
 
-.scroll { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 4px 16px 28px; }
+.scroll { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 4px 16px calc(28px + var(--safe-bottom)); }
 
 /* ===================== 환율 계산 ===================== */
 .saved-rate {
@@ -350,13 +350,17 @@ button { font-family: inherit; cursor: pointer; }
 .thresholds .t-target { font-weight: 600; font-size: 18px; letter-spacing: -0.01em; }
 .thresholds .t-yen { color: var(--accent); font-size: 15px; margin-top: 3px; font-weight: 600; font-variant-numeric: tabular-nums; }
 
-.sum-footer { flex: 0 0 auto; padding: 10px 0 calc(8px + var(--safe-bottom)); }
+.sum-footer {
+  flex: 0 0 auto;
+  padding: 10px 0 calc(8px + var(--safe-bottom));
+  /* iOS standalone에서 키패드 연타 시 문서 러버밴드(전체 화면 출렁) 방지 */
+  touch-action: none;
+}
 .sum-input {
   width: 324px;
   max-width: calc(100% - 32px);
   margin: 0 auto 12px;
-  min-height: 44px;
-  padding: 8px 0;
+  height: 44px;
   text-align: center;
   font-size: 24px;
   font-weight: 600;

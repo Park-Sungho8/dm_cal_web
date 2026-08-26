@@ -168,6 +168,7 @@ const Exchange = {
 const Sum = {
   el: {
     body: $("#view-sum .sum-body"),
+    footer: $("#view-sum .sum-footer"),
     total: $("#sum-total"),
     chips: $("#sum-chips"),
     thresholds: $("#sum-thresholds"),
@@ -352,6 +353,8 @@ const Sum = {
 
   init() {
     this.buildKeypad();
+    // touch-action:none 미지원/미적용 경로 보강 — 키패드 터치가 문서를 끌지 못하게
+    this.el.footer.addEventListener("touchmove", (e) => e.preventDefault(), { passive: false });
   },
 };
 
