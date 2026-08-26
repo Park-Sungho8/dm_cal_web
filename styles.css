@@ -356,6 +356,10 @@ button { font-family: inherit; cursor: pointer; }
   /* iOS standalone에서 키패드 연타 시 문서 러버밴드(전체 화면 출렁) 방지 */
   touch-action: none;
 }
+/* 홈화면 앱(주소창 없음)에선 키패드를 홈 인디케이터 바로 위까지 붙임 */
+@media (display-mode: standalone) {
+  .sum-footer { padding-bottom: max(var(--safe-bottom), 12px); }
+}
 .sum-input {
   width: 324px;
   max-width: calc(100% - 32px);

@@ -3,7 +3,7 @@
  * CACHE 버전은 pre-commit 훅(hooks/pre-commit)이 셸 내용 해시로 자동 스탬프하므로
  * 수동으로 올릴 필요가 없다. 셸이 실제로 바뀐 커밋에서만 버전이 바뀌어 자동 갱신된다.
  */
-const CACHE = "themore-916378bdc0";
+const CACHE = "themore-f3a71feb33";
 const SHELL = [
   "./",
   "./index.html",
