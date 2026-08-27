@@ -193,7 +193,8 @@ const Sum = {
 
   // SwiftUI thresholdDisplay 로직 그대로
   thresholdDisplay() {
-    if (this.numbers.length === 0 || this.savedRate <= 0) return null;
+    // 항목이 없어도 0원 기준 추천을 보여준다 (환율만 저장돼 있으면)
+    if (this.savedRate <= 0) return null;
     const totalWon = this.total * this.savedRate;
     let baseStart;
     if (totalWon <= 6000) {
