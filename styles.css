@@ -283,7 +283,14 @@ button { font-family: inherit; cursor: pointer; }
 /* 키패드는 화면 하단 고정 — 가운데(칩·추천)만 스크롤 */
 #view-sum { height: 100%; }
 .sum-body { flex: 1; display: flex; flex-direction: column; padding-top: 18px; min-height: 0; }
-.sum-middle { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.sum-middle {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  /* fixed footer에 가려지지 않도록 실측 footer 높이만큼 바닥 여백 (JS가 주입) */
+  padding-bottom: var(--footer-h, 460px);
+}
 .sum-total {
   text-align: center;
   font-size: 42px;
@@ -332,34 +339,47 @@ button { font-family: inherit; cursor: pointer; }
 }
 .chip__x:active { color: var(--fg); }
 
+/* 추천 임계값: 가로 1x3, 입력창 바로 위 고정. 칸마다 JPY 크게 위 / KRW 작게 아래 */
 .thresholds {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  padding: 16px;
-  margin: 4px auto 0;
-  max-width: 360px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 0 16px;
+  margin: 0 auto 12px;
+  width: 100%;
+  max-width: 380px;
 }
 .thresholds > div {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 12px 8px;
+  border-radius: 14px;
+  padding: 10px 4px;
   text-align: center;
 }
-.thresholds .t-target { font-weight: 600; font-size: 18px; letter-spacing: -0.01em; }
-.thresholds .t-yen { color: var(--accent); font-size: 15px; margin-top: 3px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.thresholds .t-yen { color: var(--accent); font-size: 17px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.thresholds .t-target { font-size: 13px; font-weight: 500; color: var(--fg-dim); margin-top: 3px; font-variant-numeric: tabular-nums; }
 
+/* iOS standalone이 창 높이를 실행마다 다르게 잘못 줘서(flow 레이아웃 기준이 흔들림)
+ * footer는 fixed 뷰포트 바닥에 직접 고정 — 어떤 실행에서도 화면 하단 경계와 일치.
+ * 위 내용(칩)은 --footer-h만큼 바닥 여백을 받아 footer 뒤로 숨지 않는다. */
 .sum-footer {
-  flex: 0 0 auto;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 5;
   padding: 10px 0 calc(8px + var(--safe-bottom));
+  background: rgba(8, 8, 11, 0.85);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
   /* iOS standalone에서 키패드 연타 시 문서 러버밴드(전체 화면 출렁) 방지 */
   touch-action: none;
 }
-/* 홈화면 앱(주소창 없음)에선 키패드를 홈 인디케이터 바로 위까지 붙임 */
-@media (display-mode: standalone) {
-  .sum-footer { padding-bottom: max(var(--safe-bottom), 12px); }
-}
+/* 홈화면 앱: 창 아래 죽은 영역 때문에 env(safe-area-inset-bottom)이 거짓값 —
+ * 패딩 없이 키패드를 창 바닥에 붙인다.
+ * .standalone 클래스는 JS가 navigator.standalone/display-mode로 판별해 <html>에 부여
+ * (apple 메타로 뜬 앱은 display-mode 미디어쿼리가 false라 클래스 방식이 필수) */
+.standalone .sum-footer { padding-bottom: 0; }
 .sum-input {
   width: 324px;
   max-width: calc(100% - 32px);
@@ -440,7 +460,7 @@ button { font-family: inherit; cursor: pointer; }
 /* ===== 컴팩트 모드: 항목 5개 이상이면 칩·추천 축소 (키패드는 불변) ===== */
 .sum-body.compact .chips { gap: 6px; }
 .sum-body.compact .chip { padding: 5px 10px; gap: 6px; font-size: 15px; border-radius: 10px; }
-.sum-body.compact .thresholds { gap: 6px; padding: 10px 16px 6px; }
-.sum-body.compact .thresholds > div { padding: 7px 6px; border-radius: 12px; }
-.sum-body.compact .t-target { font-size: 15px; }
-.sum-body.compact .t-yen { font-size: 13px; margin-top: 1px; }
+.sum-body.compact .thresholds { gap: 5px; padding: 0 16px; margin-bottom: 8px; }
+.sum-body.compact .thresholds > div { padding: 6px 3px; border-radius: 12px; }
+.sum-body.compact .t-target { font-size: 12px; margin-top: 1px; }
+.sum-body.compact .t-yen { font-size: 15px; }

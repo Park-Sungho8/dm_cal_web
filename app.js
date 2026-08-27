@@ -202,7 +202,7 @@ const Sum = {
       const base = Math.floor(Math.trunc(totalWon) / 1000) * 1000;
       baseStart = base + 999;
     }
-    return [0, 1, 2, 3].map((k) => {
+    return [0, 1, 2].map((k) => {
       const target = baseStart + k * 1000;
       const diff = target - totalWon;
       const yen = diff / this.savedRate;
@@ -239,13 +239,13 @@ const Sum = {
     this.el.thresholds.innerHTML = "";
     for (const item of data) {
       const cell = document.createElement("div");
-      const t = document.createElement("div");
-      t.className = "t-target";
-      t.textContent = `${item.target}원`;
       const y = document.createElement("div");
       y.className = "t-yen";
       y.textContent = item.yen;
-      cell.append(t, y);
+      const t = document.createElement("div");
+      t.className = "t-target";
+      t.textContent = `${item.target}원`;
+      cell.append(y, t);
       this.el.thresholds.appendChild(cell);
     }
   },
@@ -259,6 +259,13 @@ const Sum = {
     this.renderInput();
     // 항목 5개 이상이면 가운데 영역(칩·추천) 축소
     this.el.body.classList.toggle("compact", this.numbers.length >= 5);
+    this.syncFooterPad();
+  },
+
+  // fixed footer의 실측 높이를 칩 스크롤 영역의 바닥 여백으로 주입
+  // (추천칸 표시 여부·컴팩트 모드에 따라 footer 높이가 변한다)
+  syncFooterPad() {
+    this.el.body.style.setProperty("--footer-h", this.el.footer.offsetHeight + "px");
   },
 
   removeAt(idx) {
@@ -284,6 +291,7 @@ const Sum = {
   tap(ch) { this.current += ch; this.renderInput(); },
   clearAll() {
     this.numbers = [];
+    this.current = "";
     this.persist();
     this.renderAll();
   },
@@ -379,6 +387,15 @@ function flashToast(msg) {
 }
 
 /* ===== 부팅 ===== */
+// standalone(홈화면 앱) 감지: manifest display 없이 apple 메타로 뜨는 앱은
+// display-mode 미디어쿼리가 false이므로 iOS 전용 navigator.standalone도 함께 본다.
+if (
+  navigator.standalone === true ||
+  window.matchMedia("(display-mode: standalone)").matches
+) {
+  document.documentElement.classList.add("standalone");
+}
+
 Exchange.init();
 Sum.init();
 render();
